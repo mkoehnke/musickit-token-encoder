@@ -22,5 +22,5 @@ Simply execute the `music-token-encoder` command along with the following parame
 * Token expiration in days (currently: must not be greater than 180)
 
 ```
-./musickit-token-encoder <KEY>.p8 <KEYID> <TEAMID> 365
+./musickit-token-encoder <KEY>.p8 <KEYID> <TEAMID> 180 
 ```
