@@ -1,0 +1,37 @@
+#!/usr/bin/env ruby
+
+# Copyright (c) 2016 Mathias Koehnke (http://www.mathiaskoehnke.de)
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+
+require 'jwt'
+
+unless ARGV.length == 4 
+  puts "Usage: ruby jwt-encode.rb <key>.p8 <key_id> <team_id> <expiration_in_days>\n"
+  exit
+end
+
+iat = Time.now.to_i
+exp = (Time.now + ARGV[3].to_i * 86400).to_i 
+p8_file = ARGV[0]
+pem_file = `openssl pkcs8 -nocrypt -in #{p8_file}`
+private_key = OpenSSL::PKey::EC.new(pem_file) 
+payload = {:iss => "#{ARGV[2]}", :iat => iat, :exp => exp}
+token = JWT.encode payload, private_key, "ES256", { :alg => "ES256", :kid => "#{ARGV[1]}" }
+puts token
