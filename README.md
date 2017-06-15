@@ -19,7 +19,7 @@ Simply execute the `music-token-encoder` command along with the following parame
 * Private Key (.p8)
 * Key ID
 * Team ID
-* Token expiration in days (eg. 365)
+* Token expiration in days (currently: must not be greater than 180)
 
 ```
 ./musickit-token-encoder <KEY>.p8 <KEYID> <TEAMID> 365
